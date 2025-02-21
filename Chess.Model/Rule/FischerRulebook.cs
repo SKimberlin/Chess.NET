@@ -86,14 +86,6 @@ namespace Chess.Model.Rule
                 placements.Add(availablePositions[2]);
             }
 
-            void reverseBaseLine()
-            {
-                for (int i = 0; i < placements.Count; i++)
-                {
-                    placements[i] = 7 - placements[i];
-                }
-            }
-
             IEnumerable<PlacedPiece> makeBaseLine(int row, Color color)
             {
                 yield return new PlacedPiece(new Position(row, placements[5]), new Rook(color));
@@ -122,8 +114,6 @@ namespace Chess.Model.Rule
             randomBaseLine();
             var whitePlayer = new Player(Color.White);
             var whitePieces = makePieces(1, 0, Color.White);
-
-            reverseBaseLine();
             var blackPlayer = new Player(Color.Black);
             var blackPieces = makePieces(6, 7, Color.Black);
             var board = new Board(whitePieces.AddRange(blackPieces));

@@ -44,8 +44,6 @@ namespace ChessTests
             int kingPosition = king.Position.Column;
 
             Assert.That(rooks[0].Position.Column < kingPosition, Is.Not.EqualTo(rooks[1].Position.Column < kingPosition));
-
-            Assert.Pass();
         }
 
         [Test]
@@ -57,6 +55,7 @@ namespace ChessTests
 
             Assert.That(IsOpposite, Is.True);
         }
+        [Test]
         public void TestQueensMirrored()
         {
             PlacedPiece whiteKing = whitePieces.Find(piece => piece.Piece.GetType() == typeof(Queen));
@@ -68,7 +67,7 @@ namespace ChessTests
 
         public bool IsMirroredPosition(Position position1, Position position2)
         {
-            Position mirrorPosition = new Position(7 - position1.Row, 7 - position1.Column);
+            Position mirrorPosition = new Position(7 - position1.Row, position1.Column);
             return position2.Equals(mirrorPosition);
         }
 
