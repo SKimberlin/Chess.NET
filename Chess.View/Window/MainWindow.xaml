@@ -26,6 +26,7 @@
                     <DockPanel HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </Menu.ItemsPanel>
+            <Button Content="Back" Click="BackClick"/>
             <MenuItem Header="Game">
                 <MenuItem Header="New" Command="{Binding NewCommand}" InputGestureText="Ctrl+N">
                     <MenuItem.Icon>

@@ -104,5 +104,12 @@ namespace Chess.View.Window
                     ? promotions[selectedPiece]
                     : null;
         }
+
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            Window menuWindow = new MenuWindow();
+            menuWindow.Show();
+            this.Close();
+        }
     }
 }
