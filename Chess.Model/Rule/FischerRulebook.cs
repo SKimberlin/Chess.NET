@@ -58,39 +58,52 @@ namespace Chess.Model.Rule
         /// <returns>The newly created chess game.</returns>
         public ChessGame CreateGame()
         {
-            IEnumerable<PlacedPiece> makeBaseLine(int row, Color color)
+            List<int> placements = new List<int>();
+
+            void randomBaseLine()
             {
                 Random random = new Random();
                 List<int> darkSquares = new List<int> { 0, 2, 4, 6 };
                 List<int> lightSquares = new List<int> { 1, 3, 5, 7 };
 
-                int bishop1 = darkSquares[random.Next(darkSquares.Count)];
-                int bishop2 = lightSquares[random.Next(lightSquares.Count)];
-                List<int> availablePositions = Enumerable.Range(0, 8).Except(new List<int> { bishop1, bishop2 }).ToList();
+                placements.Add(darkSquares[random.Next(darkSquares.Count)]);
+                placements.Add(lightSquares[random.Next(lightSquares.Count)]);
+                List<int> availablePositions = Enumerable.Range(0, 8).Except(new List<int> { placements[0], placements[1] }).ToList();
 
-                int knight1 = availablePositions[random.Next(availablePositions.Count)];
-                availablePositions.Remove(knight1);
+                placements.Add(availablePositions[random.Next(availablePositions.Count)]);
+                availablePositions.Remove(placements[2]);
 
-                int knight2 = availablePositions[random.Next(availablePositions.Count)];
-                availablePositions.Remove(knight2);
+                placements.Add(availablePositions[random.Next(availablePositions.Count)]);
+                availablePositions.Remove(placements[3]);
 
-                int queen = availablePositions[random.Next(availablePositions.Count)];
-                availablePositions.Remove(queen);
+                placements.Add(availablePositions[random.Next(availablePositions.Count)]);
+                availablePositions.Remove(placements[4]);
 
-                int rook1 = availablePositions[0];
+                placements.Add(availablePositions[0]);
 
-                int king = availablePositions[1];
+                placements.Add(availablePositions[1]);
 
-                int rook2 = availablePositions[2];
+                placements.Add(availablePositions[2]);
+            }
 
-                yield return new PlacedPiece(new Position(row, rook1), new Rook(color));
-                yield return new PlacedPiece(new Position(row, knight1), new Knight(color));
-                yield return new PlacedPiece(new Position(row, bishop1), new Bishop(color));
-                yield return new PlacedPiece(new Position(row, queen), new Queen(color));
-                yield return new PlacedPiece(new Position(row, king), new King(color));
-                yield return new PlacedPiece(new Position(row, bishop2), new Bishop(color));
-                yield return new PlacedPiece(new Position(row, knight2), new Knight(color));
-                yield return new PlacedPiece(new Position(row, rook2), new Rook(color));
+            void reverseBaseLine()
+            {
+                for (int i = 0; i < placements.Count; i++)
+                {
+                    placements[i] = 7 - placements[i];
+                }
+            }
+
+            IEnumerable<PlacedPiece> makeBaseLine(int row, Color color)
+            {
+                yield return new PlacedPiece(new Position(row, placements[5]), new Rook(color));
+                yield return new PlacedPiece(new Position(row, placements[2]), new Knight(color));
+                yield return new PlacedPiece(new Position(row, placements[0]), new Bishop(color));
+                yield return new PlacedPiece(new Position(row, placements[4]), new Queen(color));
+                yield return new PlacedPiece(new Position(row, placements[6]), new King(color));
+                yield return new PlacedPiece(new Position(row, placements[1]), new Bishop(color));
+                yield return new PlacedPiece(new Position(row, placements[3]), new Knight(color));
+                yield return new PlacedPiece(new Position(row, placements[7]), new Rook(color));
             }
 
             IEnumerable<PlacedPiece> makePawns(int row, Color color) =>
@@ -106,9 +119,11 @@ namespace Chess.Model.Rule
                 var empty = ImmutableSortedDictionary.Create<Position, ChessPiece>(PositionComparer.DefaultComparer);
                 return pieces.Aggregate(empty, (s, p) => s.Add(p.Position, p.Piece));
             }
-
+            randomBaseLine();
             var whitePlayer = new Player(Color.White);
             var whitePieces = makePieces(1, 0, Color.White);
+
+            reverseBaseLine();
             var blackPlayer = new Player(Color.Black);
             var blackPieces = makePieces(6, 7, Color.Black);
             var board = new Board(whitePieces.AddRange(blackPieces));

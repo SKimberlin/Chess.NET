@@ -9,6 +9,7 @@ namespace Chess.ViewModel.Game
     using Chess.Model.Command;
     using Chess.Model.Game;
     using Chess.Model.Rule;
+    using Chess.Model.Data;
     using Chess.ViewModel.Command;
     using Chess.ViewModel.Visitor;
     using System;
@@ -56,7 +57,7 @@ namespace Chess.ViewModel.Game
         /// <param name="updateSelector">The disambiguation mechanism if multiple updates are available for a target field.</param>
         public ChessGameVM(Func<IList<Update>, Update> updateSelector)
         {
-            this.rulebook = new StandardRulebook();
+            this.rulebook = GameSettings.Instance.Rulebook;
             this.Game = this.rulebook.CreateGame();
             this.board = new BoardVM(this.Game.Board);
             this.updateSelector = updateSelector;
